@@ -30,14 +30,13 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by victoraweb on 6/3/16.
  */
 public class ForecastFragment extends Fragment {
+
+    private ArrayAdapter<String> mForecastAdapter;
 
     private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
 
@@ -73,28 +72,23 @@ public class ForecastFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-
-        String[] forecastArray = {
-                "Day 01 - Sunny - 88/63",
-                "Day 02 - Foggy- 88/63",
-                "Day 03 - Cloudy - 88/63",
-                "Day 04 - Asteroids - 88/63",
-                "Day 05 - Heavy Rain - 88/63",
-                "Day 06 - Sunny - 88/63",
-                "Day 07 - Sunny - 88/63"
-        };
-
-        List<String> weekForecast = new ArrayList<>(Arrays.asList(forecastArray));
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.list_item_forecast, weekForecast);
+         mForecastAdapter = new ArrayAdapter<String>(getActivity(), R.layout.list_item_forecast);
 
         ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast);
-        listView.setAdapter(adapter);
+        listView.setAdapter(mForecastAdapter);
 
         return rootView;
     }
 
     public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
+
+        @Override
+        protected void onPostExecute(String[] strings) {
+            if(strings != null) {
+                mForecastAdapter.clear();
+                mForecastAdapter.addAll(strings);
+            }
+        }
 
         @Override
         protected String[] doInBackground(String... params) {
@@ -297,4 +291,7 @@ public class ForecastFragment extends Fragment {
         return resultStrs;
 
     }
+
+
+
 }
