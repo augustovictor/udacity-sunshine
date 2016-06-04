@@ -1,5 +1,6 @@
 package com.example.android.sunshine.app.fragment;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -13,11 +14,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 import com.example.android.sunshine.app.BuildConfig;
 import com.example.android.sunshine.app.R;
+import com.example.android.sunshine.app.activity.DetailActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -59,11 +62,11 @@ public class ForecastFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if(id == R.id.action_refresh) {
-            FetchWeatherTask fetchWeatherTask = new FetchWeatherTask();
-            fetchWeatherTask.execute("94043");
-            return true;
-        }
+//        if(id == R.id.action_refresh) {
+//            FetchWeatherTask fetchWeatherTask = new FetchWeatherTask();
+//            fetchWeatherTask.execute("94043");
+//            return true;
+//        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -76,6 +79,21 @@ public class ForecastFragment extends Fragment {
 
         ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast);
         listView.setAdapter(mForecastAdapter);
+
+        FetchWeatherTask fetchWeatherTask = new FetchWeatherTask();
+        fetchWeatherTask.execute("94043");
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String forecast = mForecastAdapter.getItem(position);
+
+                Intent i = new Intent(getActivity(), DetailActivity.class)
+                        .putExtra(Intent.EXTRA_TEXT, forecast);
+
+                startActivity(i);
+            }
+        });
 
         return rootView;
     }
