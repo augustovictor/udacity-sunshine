@@ -60,6 +60,13 @@ public class ForecastFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.forecast_fragment, menu);
+        // Set current location in 'view in map' option
+//        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+//        String.format(
+//                getResources().getString(R.string.action_view_in_map_txt),
+//                prefs.getString(getString(R.string.pref_location_key),
+//                        getString(R.string.pref_location_default))
+//        );
     }
 
     @Override
@@ -256,7 +263,7 @@ public class ForecastFragment extends Fragment {
         long roundedHigh = Math.round(high);
         long roundedLow = Math.round(low);
 
-        String highLowStr = roundedHigh + "/" + roundedLow;
+        String highLowStr = roundedLow + "/" + roundedHigh;
         return highLowStr;
     }
 
