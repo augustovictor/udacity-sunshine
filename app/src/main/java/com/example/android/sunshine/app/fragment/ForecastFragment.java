@@ -1,9 +1,11 @@
 package com.example.android.sunshine.app.fragment;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.format.Time;
@@ -21,6 +23,7 @@ import android.widget.ListView;
 import com.example.android.sunshine.app.BuildConfig;
 import com.example.android.sunshine.app.R;
 import com.example.android.sunshine.app.activity.DetailActivity;
+import com.example.android.sunshine.app.activity.SettingsActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,6 +36,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 /**
  * Created by victoraweb on 6/3/16.
@@ -62,11 +66,17 @@ public class ForecastFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-//        if(id == R.id.action_refresh) {
-//            FetchWeatherTask fetchWeatherTask = new FetchWeatherTask();
-//            fetchWeatherTask.execute("94043");
-//            return true;
-//        }
+        switch (id) {
+            case R.id.action_settings:
+                Intent i = new Intent(getActivity(), SettingsActivity.class);
+                startActivity(i);
+                return true;
+
+            case R.id.action_refresh:
+                // Preferences
+                updateWeather();
+                return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -75,13 +85,12 @@ public class ForecastFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-         mForecastAdapter = new ArrayAdapter<String>(getActivity(), R.layout.list_item_forecast);
+        mForecastAdapter = new ArrayAdapter<String>(getActivity(), R.layout.list_item_forecast, R.id.list_item_forecast_textview, new ArrayList<String>());
 
         ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast);
         listView.setAdapter(mForecastAdapter);
 
-        FetchWeatherTask fetchWeatherTask = new FetchWeatherTask();
-        fetchWeatherTask.execute("94043");
+        updateWeather();
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -96,6 +105,21 @@ public class ForecastFragment extends Fragment {
         });
 
         return rootView;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        updateWeather();
+    }
+
+    public void updateWeather() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String zipcode = prefs.getString(getString(R.string.pref_location_key), getString(R.string.pref_location_default));
+
+        // Execution
+        FetchWeatherTask fetchWeatherTask = new FetchWeatherTask();
+        fetchWeatherTask.execute(zipcode);
     }
 
     public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
