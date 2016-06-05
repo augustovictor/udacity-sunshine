@@ -18,6 +18,7 @@
     <string name="choose_temp_unit_label">Choose temperature units</string>
     <string name="temperature_unit_key" translatable="false">temperature_unit</string>
     <string name="temperature_unit_default" translatable="false">metric</string>
+    <string name="share_label">Share</string>
 
     <string-array name="temp_units">
         <item>Metric</item>
