@@ -30,4 +30,18 @@
         <item>imperial</item>
     </string-array>
 
+    <!-- Key name for storing location in SharedPreferences [CHAR LIMIT=NONE] -->
+    <string name="pref_units_key" translatable="false">units</string>
+
+    <!-- Default temperature units -->
+    <string name="pref_units_metric" translatable="false">metric</string>
+
+    <string name="pref_units_imperial" translatable="false">imperial</string>
+
+    <!-- Date label when displaying today's weather forecast [CHAR LIMIT=20] -->
+    <string name="today">Today</string>
+
+    <!-- Date label when displaying tomorrow's weather forecast [CHAR LIMIT=20] -->
+    <string name="tomorrow">Tomorrow</string>
+
 </resources>
